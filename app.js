@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -28,19 +26,21 @@ app.use(
   })
 );
 
+/* ================= DATABASE ================= */
+
+const connection = require("./config/db"); // use db.js connection
+
 /* ================= ROUTES ================= */
 
-// Import routes
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 
-// Use routes
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/", productRoutes);
 
-/* ================= DEFAULT ROUTE (Optional Safety) ================= */
+/* ================= DEFAULT ROUTE ================= */
 
 app.get("/", (req, res) => {
   res.render("index"); // make sure index.ejs exists
@@ -58,5 +58,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
