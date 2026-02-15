@@ -1,0 +1,21 @@
+{
+  "name": "eco-store",
+  "version": "1.0.0",
+  "description": "Eco Friendly Products Store Project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.17.1"
+  },
+  "keywords": []
+}
