@@ -1,56 +1,62 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const path = require('path');
-const mysql = require('mysql2');
+require("dotenv").config();
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const path = require("path");
 
 const app = express();
 
-/* ================= DATABASE CONNECTION ================= */
-
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err);
-    } else {
-        console.log('✅ MySQL Connected...');
-    }
-});
-
-// Make db accessible in routes
-module.exports.db = db;
-
 /* ================= MIDDLEWARE ================= */
 
+// Parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
 
-app.use(session({
-    secret: 'ecoSecret',
+// Serve static files (CSS, images)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Set EJS view engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Session configuration
+app.use(
+  session({
+    secret: "ecoSecret",
     resave: false,
-    saveUninitialized: true
-}));
+    saveUninitialized: false,
+  })
+);
 
 /* ================= ROUTES ================= */
 
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const productRoutes = require('./routes/productRoutes');
+// Import routes
+const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const productRoutes = require("./routes/productRoutes");
 
-app.use('/', userRoutes);
-app.use('/admin', adminRoutes);
-app.use('/', productRoutes);
+// Use routes
+app.use("/", userRoutes);
+app.use("/admin", adminRoutes);
+app.use("/", productRoutes);
+
+/* ================= DEFAULT ROUTE (Optional Safety) ================= */
+
+app.get("/", (req, res) => {
+  res.render("index"); // make sure index.ejs exists
+});
+
+/* ================= ERROR HANDLER ================= */
+
+app.use((err, req, res, next) => {
+  console.error("Server Error:", err);
+  res.status(500).send("Something went wrong!");
+});
 
 /* ================= SERVER ================= */
+
 const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on  ${PORT}`);
+  console.log(`🚀 Server running on ${PORT}`);
 });
