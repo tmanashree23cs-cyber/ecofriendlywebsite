@@ -9,7 +9,7 @@ const app = express();
 /* ================= DATABASE CONNECTION ================= */
 
 const db = mysql.createConnection({
-     host: process.env.MYSQLHOST,
+  host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
@@ -51,6 +51,6 @@ app.use('/', productRoutes);
 
 /* ================= SERVER ================= */
 
-app.listen(3000, () => {
-    console.log("🚀 Server running on http://localhost:3000");
+app.listen(PORT, () => {
+    console.log("🚀 Server running on  ${PORT}");
 });
